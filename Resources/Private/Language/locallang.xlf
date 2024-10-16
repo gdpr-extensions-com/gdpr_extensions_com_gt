@@ -88,10 +88,10 @@
             <source>Background Image</source>
          </trans-unit>
          <trans-unit id="tx_gdprextensionscomyoutube_domain_model_gdprmanager.background_image_color" resname="tx_gdprextensionscomyoutube_domain_model_gdprmanager.background_image_color">
-            <source>Background Image Color</source>
+            <source>Background Color</source>
          </trans-unit>
          <trans-unit id="tx_gdprextensionscomyoutube_domain_model_gdprmanager.background_image_color.description" resname="tx_gdprextensionscomyoutube_domain_model_gdprmanager.background_image_color.description">
-            <source>Background Image Color</source>
+            <source>Background Color</source>
          </trans-unit>
          <trans-unit id="tx_gdprextensionscomyoutube_domain_model_gdprmanager.button_color" resname="tx_gdprextensionscomyoutube_domain_model_gdprmanager.button_color">
             <source>Button Color</source>
@@ -101,6 +101,9 @@
          </trans-unit>
          <trans-unit id="tx_gdprextensionscomyoutube_domain_model_gdprmanager.text_color" resname="tx_gdprextensionscomyoutube_domain_model_gdprmanager.text_color">
             <source>Text Color</source>
+         </trans-unit>
+		 <trans-unit id="tx_gdprextensionscomyoutube_domain_model_gdprmanager.heading_color" resname="tx_gdprextensionscomyoutube_domain_model_gdprmanager.heading_color">
+            <source>Heading Color</source>
          </trans-unit>
          <trans-unit id="tx_gdprextensionscomyoutube_domain_model_gdprmanager.button_text_color" resname="tx_gdprextensionscomyoutube_domain_model_gdprmanager.button_text_color">
             <source>Button Text Color</source>
@@ -147,6 +150,9 @@
 			<trans-unit id="gdpr.heading" resname="gdpr.heading">
 				<source>GDPR Manager</source>
 			</trans-unit>
+			<trans-unit id="googletagmanager.twoclick.solution" resname="googletagmanager.twoclick.solution">
+				<source>Google Tag Manager 2-Click Solution</source>
+			</trans-unit>
 			<trans-unit id="gdpr.twoclick.desc" resname="gdpr.twoclick.desc">
 				<source>Manage Your GDPR 2 Click Solution</source>
 			</trans-unit>
@@ -184,7 +190,8 @@
 				<source>GDPR 2-CLICK COOKIE CONSENT</source>
 			</trans-unit>
 			<trans-unit id="gdpr.twoclick.consent.desc" resname="gdpr.twoclick.consent.desc">
-				<source>Third-party advertising services are used. If you agree here, personal data will be transferred to these providers.</source>
+				<source>Cookies provided by host are managed through the Google Tag Manager 2xClick solution
+					developed by gdpr-extensions.com</source>
 			</trans-unit>
 			<trans-unit id="gdpr.accept.all" resname="gdpr.accept.all">
 				<source>Accept All</source>

@@ -22,6 +22,8 @@ if ((int)\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version() 
                         'index',
                         'show',
                         'new',
+                        'editAdd',
+                        'save',
                         'create',
                         'edit',
                         'update',

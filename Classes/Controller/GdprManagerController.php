@@ -240,7 +240,133 @@ class GdprManagerController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 
         return $this->htmlResponse();
     }
+    /**
+     * action editAdd
+     *
+     * @param int $id
+     * @param string $url
+     * @param \GdprExtensionsCom\GdprExtensionsComMt\Domain\Model\GdprManager $gdprManager
+     */
+    public function editAddAction(int $id, string $url ,\GdprExtensionsCom\GdprExtensionsComMt\Domain\Model\GdprManager $gdprManager): \Psr\Http\Message\ResponseInterface
+    {
+        $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
+        $sites = $siteFinder->getAllSites();
+        $configurations = [];
 
+        foreach ($sites as $siteKey => $site) {
+            $configurations[$siteKey] = $site->getConfiguration();
+        }
+        $uploadImageUrl = $this->uriBuilder->reset()
+            ->uriFor('uploadImage');
+        $this->view->assign('uploadImageUrl', $uploadImageUrl);
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('gdpr_tracking');
+            $result = $queryBuilder
+                ->select('*')
+                ->from('gdpr_tracking')
+                ->where(
+                    $queryBuilder->expr()->eq('root_pid', $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT))
+                )
+                ->executeQuery()->fetchAssociative();
+        if ($result) {
+            $gdprManager->setGtmCode($result['gtm_code']);
+            $gdprManager->setBaseUrl($result['base_url']);
+            $gdprManager->setSiteId($result['root_pid']);
+            $gdprManager->setHeading($result['gtm_heading']);
+            $gdprManager->setContent($result['gtm_desc']);
+            $gdprManager->setButtonText($result['gtm_button_text']);
+            $gdprManager->setEnableBackgroundImage($result['gtm_enable_background_image']);
+            $gdprManager->setBackgroundImage($result['gtm_background_image']);
+            $gdprManager->setBackgroundImageColor($result['gtm_background_image_color']);
+            $gdprManager->setButtonColor($result['gtm_button_color']);
+            $gdprManager->setButtonTextColor($result['gtm_button_text_color']);
+            $gdprManager->setTextColor($result['gtm_text_color']);
+            $gdprManager->setHeadingColor($result['gtm_heading_color']);
+            $gdprManager->setButtonShape($result['gtm_button_shape']);
+            $gdprManager->setExtensionTitle($result['extension_title']);
+            $gdprManager->setExtensionKey($result['extension_key']);
+        }
+       
+       
+        $this->view->assign('id', $id);
+        $this->view->assign('url', $url);
+        $this->view->assign('gdprManager', $gdprManager);
+        return $this->htmlResponse();
+    }
+        /**
+     * action save
+     * @param \GdprExtensionsCom\GdprExtensionsComMt\Domain\Model\GdprManager $gdprManager
+     */
+    public function saveAction(\GdprExtensionsCom\GdprExtensionsComMt\Domain\Model\GdprManager $gdprManager): \Psr\Http\Message\ResponseInterface
+    {
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('gdpr_tracking');
+        
+        // Check if the record with the given root_pid (siteId) already exists
+        $existingRecord = $queryBuilder
+            ->select('uid')
+            ->from('gdpr_tracking')
+            ->where(
+                $queryBuilder->expr()->eq('root_pid', $queryBuilder->createNamedParameter($gdprManager->getSiteId(), \PDO::PARAM_INT))
+            )
+            ->executeQuery()
+            ->fetchOne();
+
+        if ($existingRecord) {
+            // Record exists, so update it
+            $queryBuilder
+                ->update('gdpr_tracking')
+                ->where(
+                    $queryBuilder->expr()->eq('root_pid', $queryBuilder->createNamedParameter($gdprManager->getSiteId(), \PDO::PARAM_INT))
+                )
+                ->set('gtm_code', $gdprManager->getGtmCode())
+                ->set('base_url', $gdprManager->getBaseUrl())
+                ->set('gtm_heading', $gdprManager->getHeading())
+                ->set('gtm_desc', $gdprManager->getContent())
+                ->set('gtm_button_text', $gdprManager->getButtonText())
+                ->set('gtm_enable_background_image', $gdprManager->getEnableBackgroundImage())
+                ->set('gtm_background_image', $gdprManager->getBackgroundImage())
+                ->set('gtm_background_image_color', $gdprManager->getBackgroundImageColor())
+                ->set('gtm_button_color', $gdprManager->getButtonColor())
+                ->set('gtm_button_text_color', $gdprManager->getButtonTextColor())
+                ->set('gtm_text_color', $gdprManager->getTextColor())
+                ->set('gtm_heading_color', $gdprManager->getHeadingColor())
+                ->set('gtm_button_shape', $gdprManager->getButtonShape())
+                ->set('extension_title', $gdprManager->getExtensionTitle())
+                ->set('extension_key', $gdprManager->getExtensionKey())
+                ->executeStatement();
+        } else {
+            // No existing record, so insert a new one
+            $queryBuilder
+                ->insert('gdpr_tracking')
+                ->values([
+                    'gtm_code' => $gdprManager->getGtmCode(),
+                    'root_pid' => $gdprManager->getSiteId(),
+                    'base_url' => $gdprManager->getBaseUrl(),
+                    'gtm_heading' => $gdprManager->getHeading(),
+                    'gtm_desc' => $gdprManager->getContent(),
+                    'gtm_button_text' => $gdprManager->getButtonText(),
+                    'gtm_enable_background_image' => $gdprManager->getEnableBackgroundImage(),
+                    'gtm_background_image' => $gdprManager->getBackgroundImage(),
+                    'gtm_background_image_color' => $gdprManager->getBackgroundImageColor(),
+                    'gtm_button_color' => $gdprManager->getButtonColor(),
+                    'gtm_button_text_color' => $gdprManager->getButtonTextColor(),
+                    'gtm_text_color' => $gdprManager->getTextColor(),
+                    'gtm_heading_color' => $gdprManager->getHeadingColor(),
+                    'gtm_button_shape' => $gdprManager->getButtonShape(),
+                    'extension_title' => $gdprManager->getExtensionTitle(),
+                    'extension_key' => $gdprManager->getExtensionKey(),
+                ])
+                ->executeStatement();
+        }
+       
+
+        return $this->redirect('editAdd', null, null, [
+            'id' => $gdprManager->getSiteId(), 
+            'url' => $gdprManager->getBaseUrl(), 
+            'gdprManager' => $gdprManager
+        ]);
+    }
     /**
      * action update
      *
